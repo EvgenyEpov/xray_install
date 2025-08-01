@@ -5,7 +5,7 @@ from aiogram import Bot
 from aiogram.types import Message
 
 
-async def update_and_install_xray(ip, password):
+async def update_and_install_xray(message: Message, ip, password):
     """
     Выполняет обновление системы, установку XRay, обновление геолокации и запуск XRay.
 
@@ -55,13 +55,11 @@ async def update_and_install_xray(ip, password):
             await conn.run('sudo reboot', check=True)
 
             if result.exit_status == 0:
-                return f"✅ XRay успешно установлен, запущен и активирован на сервере {ip}."
+                await message.answer(f"✅ XRay успешно установлен, запущен и активирован на сервере {ip}.")
             else:
-                return f"⚠️ XRay установлен, но возникла ошибка при запуске: {result.stderr}"
-
-
+                await message.answer(f"⚠️ XRay установлен, но возникла ошибка при запуске: {result.stderr}")
     except asyncssh.Error as e:
-        return f"Ошибка на сервере {ip}: {e}"
+        await message.answer(f"Ошибка на сервере {ip}: {e}")
 
 
 async def process_server(ip, password, message):
